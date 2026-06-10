@@ -1,0 +1,31 @@
+version: "3.2"
+
+services:
+  mariadb:
+    image: mariadb:10.11
+    container_name: glpi-db
+    environment:
+      - MARIADB_ROOT_PASSWORD=StrongRootPassword!
+      - MARIADB_DATABASE=glpi
+      - MARIADB_USER=glpi_user
+      - MARIADB_PASSWORD=StrongGlpiPassword!
+    volumes:
+      - glpi_db_data:/var/lib/mysql
+    restart: always
+
+  glpi:
+    image: diouxx/glpi
+    container_name: glpi-web
+    ports:
+      - "8080:80"
+    environment:
+      - TIMEZONE=Africa/Cairo
+    volumes:
+      - glpi_data:/var/www/html/glpi
+    depends_on:
+      - mariadb
+    restart: always
+
+volumes:
+  glpi_db_data:
+  glpi_data:
